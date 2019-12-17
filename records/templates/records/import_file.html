@@ -1,0 +1,115 @@
+{% extends 'basic.html' %}
+{% block content %}
+<html>
+    <head>
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+      <!-- Popper JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+      <style type="text/css">
+        .button1{
+          border-radius: 50%;
+          border: none;
+          color: white;
+          padding: 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+        }
+        #b2{
+          background-color: #CAFAFE;
+        }
+        #c1{
+          border: 1px solid green; 
+          padding:5px; 
+          border-radius: 2px;
+          cursor: pointer;
+        }
+      </style>
+
+    </head>
+
+    <body style="margin-top: 30px;margin-left: 30px;" id="b2">
+
+      <h2 align="center" style="color: #557A95;">Atendance Management System</h2>
+
+      <p>Do you want to add Holidays: <button data-toggle="modal" data-target="#exampleModal">Add</button></p>
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered bd-example-modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add a Holiday</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              
+              <form method="POST" action="/setHolidays/">
+              {% csrf_token %}
+                <table border="0">
+                  <thead>
+                    <th>Holiday type</th>
+                    <th>Date</th>
+                  </thead>
+                  <tbody id="myTable">
+                    <tr>
+                      <td><input type="text" name="htype"></td>
+                      <td><input type="date" name="hdate"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button type="button" id="b1" class="button1 btn btn-primary">Add +</button>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" value="Save Changes" class="btn btn-primary">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <br>
+      <p>Click here to view the list of the employees => <a href="http://127.0.0.1:8000/list/" target="_blank">Click me!!</a>
+      <br><br>
+      <form method="POST" enctype="multipart/form-data" action='/import/'>
+        {% csrf_token %} 
+        <input type="file"
+               title="Upload excel file"
+               name="excel_file"
+               style="border: 1px solid black; padding: 5px;"
+               required="required">
+        <p>
+          <br>
+          <input type="submit" value="Import" id="c1">
+      </form>
+        </p>
+      <hr>
+
+      {% for a in user_data %}
+        {{a}}<br><br>
+      {% endfor %}
+
+      <script type="text/javascript">
+        $("#b1").click(function () {
+          $("#myTable").append("<tr><td><input type='text' name='htype'></td> <td><input type='date' name='hdate'></td></tr>")
+        });
+      </script>
+
+    </body>
+</html>
+{% endblock %}

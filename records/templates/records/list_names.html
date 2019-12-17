@@ -1,0 +1,35 @@
+{% extends 'basic.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		a:link{
+			text-decoration: none;
+			color:black;
+		}
+		a:hover{
+			font-size: 105%;
+			background-color: grey;
+		}
+		a:visited{
+			color: black;
+		}
+		#b{
+			background-color: #CAFAFE;
+		}
+		#d{
+			color: #583845;
+			font-size: 120%;
+		}
+	</style>
+</head>
+<body id="b">
+	<h1 style="color: #557A95;">Click on any of the employee name to view his/her monthly attendance</h1>
+	{% for a in my_obj %}
+		{{forloop.counter}}. <a href="/list/detail.html/{{a.id}}" target="_blank"><span id="d">{{a.staff_name}}</span><br></a>
+	{% endfor %}
+</body>
+</html>
+{% endblock %}

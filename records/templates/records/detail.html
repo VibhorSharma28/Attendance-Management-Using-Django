@@ -1,0 +1,230 @@
+{% extends 'basic.html' %}
+{% block content %}
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style type="text/css">
+			.d3{
+				width: 135px;
+				height:155px;
+				float: left;
+				border-style: solid;
+				border-color: #557A95;
+				border-width: 1px;
+				background-image: linear-gradient(#3FEEE6,#55BCC9);
+			}
+			
+			#h{
+				color: #557A95;
+				position: relative;
+				left: 30px;
+			}
+			#d1, #d2{
+				width:100px;
+			}
+			.ff *{
+				vertical-align: middle;
+			}
+			#b1{
+				background-color: #CAFAFE;
+			}
+			#back{
+				margin-right: 20px;
+				float: right;
+			}
+		</style>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<!-- Popper JS -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	</head>
+	<body id="b1">
+		<br>
+		<h1 id="h">{{my_obj.staff_name}}</h1>
+		<button id="back"><a href = "/list/"><span style="color:#557A95;">Go Back</span></a></button>
+		<br><br>
+		{% for i in obj %}
+			<div class="d3" style="cursor:pointer;position:relative;left:30px" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl">
+				&nbsp;&nbsp;
+				<span id="wdate">{{i.work_date}}</span>
+				<br><br>
+				&nbsp;&nbsp;
+				{{i.work_day}}
+				<br><br>
+				{% for j in h_obj %}
+					{% ifequal i.work_date j.date %}
+						<span id="o" style="position:relative; left:10px;">{{j.holiday_type}}</span>
+					{% else %}
+						<span id="o" style="position:relative; left:10px;"></span>
+					{% endifequal %}
+				{% endfor %}
+				{% if i.entry_time == None and i.exit_time == None %}
+					&nbsp;&nbsp;<br>
+					<span class="p1" style="position: relative;left: 10px;color: red;">{{i.entry_time}}</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class="p2" style="color:red;">{{i.exit_time}}</span><br>
+				
+				{% elif i.entry_time == None %}
+					&nbsp;&nbsp;<br>
+					<span class="p1" style="position: relative;left: 10px; color:red;">{{i.entry_time}}</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class="p2">{{i.exit_time}}</span>
+					<br>
+				
+				{% elif i.exit_time == None %}
+					&nbsp;&nbsp;<br>
+					<span class="p1" style="position: relative;left: 10px;">{{i.entry_time}}</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class="p2" style="color: red;">{{i.exit_time}}</span>
+					<br>
+				{% else %}
+					&nbsp;&nbsp;<br>
+					<span class="p1" style="position: relative;left: 10px;">{{i.entry_time}}</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class="p2">{{i.exit_time}}</span><br>
+				{% endif %}
+				<input type="hidden" id="w1" value="{{i.id}}">	
+			</div>
+		{% endfor %}
+
+		<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Staff Information</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<form id="form1" method="POST" action="/list/save.html/{{my_obj.id}}">
+                {% csrf_token %}
+                <div id="error"></div>
+                <input type="radio" name="work" id="u1" value="P">Present &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="work" id="u2" value="L">On Leave &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="work" id="u3" value="OD">On Duty &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="work" id="u4" value="WFH">Work From Home &nbsp;&nbsp;&nbsp;&nbsp;<br><br>
+                <br>
+                <p class="ff">
+                	<label for="textarea">Remarks: </label>
+                	<textarea id="textarea" rows="2" cols="40" name="remark" placeholder="Enter your Remarks here"></textarea>
+                </p>
+                <br>
+                <table>
+		      		<tbody>
+		      			<tr>
+		      				<td><strong>In Time:</strong>&nbsp; <input type="text" id="d1" name="in_time">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		      				<td><strong>Out Time:</strong>&nbsp; <input type="text" id="d2" name="out_time"></td>
+		      			</tr>
+		      		</tbody>
+		      	</table>
+		      	<p><input type="hidden" id="w2" name="det_id"></p>
+		    </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <input type="submit" class="btn btn-primary" value="Save changes">
+		      </div>
+		  </form>
+		    </div>
+		  </div>
+		</div>
+		<p id="p3"></p>
+		<script type="text/javascript">
+			$(document).ready(function(){
+
+				$(".d3").click(function(){
+					var k = $(this).find(".p1").text();
+					var k1 = $(this).find(".p2").text();
+					var k2 = $(this).find("#w1").val();
+					$("#d1").val(k);
+					$("#d2").val(k1);
+					$("#w2").val(k2);
+				});
+
+				var error='';
+				$('#u2,#u3,#u4').click(function() { 
+  					$("#d1").prop("disabled",true);
+  					$("#d2").prop("disabled",true);
+				});
+
+				$('#u1').click(function() { 
+  					$("#d1").prop("disabled",false);
+  					$("#d2").prop("disabled",false);
+				});
+				$('input[type="submit"]').click(function(e){
+					e.preventDefault();
+					if($('#u1').prop("checked"))
+					{
+
+						if($("#d1").val()=="" || $("#d2").val()=="" || $("#d1").val()=="None" || $("#d2").val()=="None" )
+						{
+							error += "<p>The time field is required.</p>";
+							$('#error').html('<div class="alert alert-danger" role="alert"><strong>There is error:</strong>'+error+'</div>');
+						}
+						else
+						{
+							$("#form1").submit();
+						}
+					}
+					else
+					{
+						$("#form1").submit();
+					}	
+				});
+			});
+			/*now we need to make the color of none timings as red
+			in-time is stored as a list in p1 and out-time as a list in p2 but they are stored as t1t2t3t4t5t6t7t8
+
+			*/	
+				/*
+				var z = $("#t1").val();
+				var x = $("#wdate").text();
+				var s = $("#t2").val();
+				//alert(z);
+				//alert(x);			
+				var n = $(".d3").find("#wdate").text();
+				alert(n);
+				var y = n.match(/.{1,10}/g);
+				alert(y);
+				for(var i=0;i<y.length;i++)
+				{
+					if(z==y[i])
+					{
+						$("#o").text(s);
+					}
+				}
+				var r = $(".d3").find("#p1").text();
+				var arr = r.split("");
+				var ctr=1;
+				var x = $(".d3").find("#p2").text();
+				var ar = x.split("");
+				for(var i=0;i<arr.length;i++)
+				{
+					if(arr[i]=="n")
+					{
+						$("#p1").css("background-color","red");
+						$("#p2").css("background-color","red");
+						ctr=ctr+1;
+					}
+				}
+				for(var j=0;i<ar.length;i++)
+				{
+					if(ar[i]=="n")
+					{
+						$("#p1").css("background-color","red");
+						$("#p2").css("background-color","red");
+					}
+				}
+				$("#p3").html(arr);
+				// this is for the background image of the table which we have shown background-image: linear-gradient(#3FEEE6,#55BCC9);
+				*/
+		</script>		
+	</body>
+</html>
+{% endblock %}
